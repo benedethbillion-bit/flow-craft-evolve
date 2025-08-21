@@ -1,0 +1,67 @@
+// Prisma schema for Clarity On
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id    Int     @id @default(autoincrement())
+  slug  String  @unique
+  name  String
+  posts Post[]
+}
+
+model Post {
+  id          Int       @id @default(autoincrement())
+  title       String
+  slug        String    @unique
+  excerpt     String
+  content     String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  categoryId  Int
+  category    Category  @relation(fields: [categoryId], references: [id])
+  comments    Comment[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  author    String
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model Mood {
+  id        Int      @id @default(autoincrement())
+  timestamp DateTime @default(now())
+  value     Int
+  note      String?
+}
+
+model JournalEntry {
+  id        Int      @id @default(autoincrement())
+  date      DateTime @default(now())
+  title     String
+  content   String
+}
+
+model CommunityPost {
+  id        Int      @id @default(autoincrement())
+  author    String
+  content   String
+  createdAt DateTime @default(now())
+}
+
+model MusicTrack {
+  id        Int      @id @default(autoincrement())
+  title     String
+  url       String
+  duration  Int
+}
+
